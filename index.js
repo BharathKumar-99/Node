@@ -1,10 +1,9 @@
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 app.use(express.json());
 
 app.use('/questions', require('./routes/questions'));
-app.use('/user', require('./routes/users'));
 app.get('/', function (req, res) {
     res.send('Server Up');
 })
