@@ -43,7 +43,7 @@ module.exports.addBulkQuestions = async function (req) {
             }
 
             return question = prisma.question.createMany({
-                data: bulkQuestions
+                data: bulkQuestions,
             });
 
         });
