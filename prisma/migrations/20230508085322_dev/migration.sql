@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Instructor" ALTER COLUMN "image" DROP NOT NULL,
+ALTER COLUMN "available" DROP NOT NULL,
+ALTER COLUMN "statusMsg" DROP NOT NULL,
+ALTER COLUMN "consultant" DROP NOT NULL;

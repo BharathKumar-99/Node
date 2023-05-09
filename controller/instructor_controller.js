@@ -1,11 +1,11 @@
-const userModel = require("../model/user_model")
+const InstructorModel = require("../model/instructor_model")
 const jwt = require('jsonwebtoken');
 const secret = process.env.secret;
 
 
 const login = async (req, res) => {
     try {
-        await userModel.login(req, res).then((val) => {
+        await InstructorModel.login(req, res).then((val) => {
             if (val != null) {
                 const token = jwt.sign({ data: val }, secret, { expiresIn: '10d' });
                 res.send({
@@ -29,7 +29,7 @@ const login = async (req, res) => {
 }
 const signup = async (req, res) => {
     try {
-        await userModel.signup(req, res).then((val) => {
+        await InstructorModel.signup(req, res).then((val) => {
             if (val != null) {
                 if (val == 'Email Already Exists Try Different Email Address') {
                     res.send({
@@ -58,9 +58,9 @@ const signup = async (req, res) => {
         });
     }
 }
-const getAllUser = async (req, res) => {
+const getAllInstructor = async (req, res) => {
     try {
-        await userModel.getAllUser(req, res).then((val) => {
+        await InstructorModel.getAllinstructor(req, res).then((val) => {
             if (val != null) {
                 res.send({
                     "data": val,
@@ -68,7 +68,7 @@ const getAllUser = async (req, res) => {
                 })
             } else {
                 res.send({
-                    "data": "No User Found"
+                    "data": "No Instructor Found"
                 })
             }
         })
@@ -80,9 +80,9 @@ const getAllUser = async (req, res) => {
         });
     }
 }
-const getSingleUser = async (req, res) => {
+const getSingleInstructor = async (req, res) => {
     try {
-        await userModel.getSingleUser(req, res).then((val) => {
+        await InstructorModel.getSingleinstructor(req, res).then((val) => {
             if (val != null) {
                 res.send({
                     "data": val,
@@ -90,7 +90,7 @@ const getSingleUser = async (req, res) => {
                 })
             } else {
                 res.send({
-                    "data": "No User Found"
+                    "data": "No Instructor Found"
                 })
             }
         })
@@ -102,26 +102,17 @@ const getSingleUser = async (req, res) => {
         });
     }
 }
-const createNewUser = async (req, res) => {
+const createNewInstructor = async (req, res) => {
     try {
-        await userModel.createNewUser(req, res).then((val) => {
+        await InstructorModel.createNewinstructor(req, res).then((val) => {
             if (val != null) {
-                if (val === "Email Exits Try Another") {
-                    res.send({
-                        "data": null,
-                        "message": val
-                    })
-                }
-                else {
-                    res.send({
-                        "data": val,
-                        "message": "Data Created successful"
-                    })
-                }
-
+                res.send({
+                    "data": val,
+                    "message": "Data Created successful"
+                })
             } else {
                 res.send({
-                    "data": "No User Found"
+                    "data": "No Instructor Found"
                 })
             }
         })
@@ -133,9 +124,9 @@ const createNewUser = async (req, res) => {
         });
     }
 }
-const updateUser = async (req, res) => {
+const updateInstructor = async (req, res) => {
     try {
-        await userModel.updateUser(req, res).then((val) => {
+        await InstructorModel.updateinstructor(req, res).then((val) => {
             if (val != null) {
                 if (val === "Email Exits Try Another") {
                     res.send({
@@ -163,13 +154,13 @@ const updateUser = async (req, res) => {
         });
     }
 }
-const deleteUser = async (req, res) => {
+const deleteInstructor = async (req, res) => {
     try {
-        await userModel.deleteUser(req, res).then((val) => {
+        await InstructorModel.deleteinstructor(req, res).then((val) => {
             if (val != null) {
                 res.send({
                     "data": val,
-                    "message": "User Deleted successful"
+                    "message": "Instructor Deleted successful"
                 })
             } else {
                 res.send({
@@ -186,70 +177,10 @@ const deleteUser = async (req, res) => {
     }
 }
 
-//Admin
-const adminLogin = async (req, res) => {
-    try {
-        await userModel.adminLogin(req, res).then((val) => {
-            if (val != null) {
-                const token = jwt.sign({ data: val }, secret, { expiresIn: '10d' });
-                res.send({
-                    "data": val,
-                    "token": token,
-                    "message": "Login successful"
-                })
-            } else {
-                res.send({
-                    "data": null,
-                    "message": "Email or Password Wrong"
-                })
-            }
-        })
-    } catch (error) {
-        res.send({
-            status: 400,
-            success: false,
-            message: error.message
-        });
-    }
-}
-
-const adminSignup = async (req, res) => {
-    try {
-        await userModel.adminSignup(req, res).then((val) => {
-            if (val != null) {
-                if (val == 'Email Already Exists Try Different Email Address') {
-                    res.send({
-                        "data": null,
-                        "message": val
-                    })
-                } else {
-                    const token = jwt.sign({ data: val }, secret, { expiresIn: '10d' });
-                    res.send({
-                        "data": val,
-                        "token": token,
-                        "message": "Signup successful"
-                    })
-                }
-            } else {
-                res.send({
-                    "data": "All Field Required"
-                })
-            }
-        })
-    } catch (error) {
-        res.send({
-            status: 400,
-            success: false,
-            message: error.message
-        });
-    }
-}
-
-
 
 
 
 module.exports = {
     login,
-    signup, adminLogin, adminSignup, getAllUser, getSingleUser, createNewUser, updateUser, deleteUser
+    signup, getAllInstructor, getSingleInstructor, createNewInstructor, updateInstructor, deleteInstructor
 }

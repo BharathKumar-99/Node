@@ -4,14 +4,15 @@ const prisma = new PrismaClient()
 
 module.exports.signup = async function (req) {
     try {
-        const user = await prisma.user.create({
+        console.log(req);
+        const instructor = await prisma.instructor.create({
             data: {
                 email: req.body.email,
                 password: req.body.password,
                 name: req.body.name
             }
         });
-        return user;
+        return instructor;
     } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             // The .code property can be accessed in a type-safe manner
@@ -19,7 +20,7 @@ module.exports.signup = async function (req) {
                 return 'Email Already Exists Try Different Email Address';
             }
         }
-        console.log(e.code);
+        console.log(e);
         return JSON.stringify(e.code)
     }
 
@@ -28,14 +29,14 @@ module.exports.signup = async function (req) {
 module.exports.login = async function (req) {
 
     try {
-        const user = await prisma.user.findFirst({
+        const instructor = await prisma.instructor.findFirst({
             where: {
                 email: req.body.email,
                 password: req.body.password,
             }
         });
 
-        return user;
+        return instructor;
 
 
     } catch (e) {
@@ -45,51 +46,50 @@ module.exports.login = async function (req) {
     }
 
 }
-module.exports.getAllUser = async function (req) {
+module.exports.getAllinstructor = async function (req) {
     try {
-        const user = await prisma.user.findMany();
-        return user;
+        const instructor = await prisma.instructor.findMany();
+        return instructor;
     } catch (e) {
         console.log(e);
         return JSON.stringify(e)
     }
 }
-module.exports.getSingleUser = async function (req) {
+module.exports.getSingleinstructor = async function (req) {
     try {
-        const user = await prisma.user.findFirst(
+        const instructor = await prisma.instructor.findFirst(
             {
                 where: {
                     id: req.body.id
                 }
             }
         );
-        return user;
+        return instructor;
     } catch (e) {
         console.log(e);
         return JSON.stringify(e)
     }
 }
-module.exports.createNewUser = async function (req) {
+module.exports.createNewinstructor = async function (req) {
     try {
-        const user = await prisma.user.create(
+        const instructor = await prisma.instructor.create(
             {
                 data: {
                     email: req.body.email,
+                    image: req.file.path,
                     password: req.body.password,
                     name: req.body.name,
-                    profilePage: req.file.path
+                    consultant: req.body.isConsultant
                 }
             }
         );
-        return user;
+        return instructor;
     } catch (e) {
-        if (e.code === "P2002") {
-            return "Email Exits Try Another"
-        }
+        console.log(e);
         return JSON.stringify(e)
     }
 }
-module.exports.updateUser = async function (req) {
+module.exports.updateinstructor = async function (req) {
     var data = req.body;
     try {
         const updatedData = {
@@ -109,7 +109,7 @@ module.exports.updateUser = async function (req) {
             informationId: data.informationId ?? undefined
             // add other fields that you want to update
         }
-        const user = await prisma.user.update(
+        const instructor = await prisma.instructor.update(
             {
                 where: {
                     id: parseInt(data.id)
@@ -117,7 +117,7 @@ module.exports.updateUser = async function (req) {
                 data: updatedData
             }
         );
-        return user;
+        return instructor;
     } catch (e) {
         if (e.code === "P2002") {
             return "Email Exits Try Another"
@@ -125,15 +125,15 @@ module.exports.updateUser = async function (req) {
         return JSON.stringify(e)
     }
 }
-module.exports.deleteUser = async function (req) {
+module.exports.deleteinstructor = async function (req) {
 
     try {
-        const user = await prisma.user.delete({
+        const instructor = await prisma.instructor.delete({
             where: {
                 id: req.body.id
             }
         });
-        return user;
+        return instructor;
 
 
     } catch (e) {
@@ -141,51 +141,5 @@ module.exports.deleteUser = async function (req) {
         console.log(e);
         return JSON.stringify(e)
     }
-
-}
-
-
-//Admin
-module.exports.adminLogin = async function (req) {
-
-    try {
-        const user = await prisma.admin.findFirst({
-            where: {
-                email: req.body.email,
-                password: req.body.password,
-            }
-        });
-
-        return user;
-
-
-    } catch (e) {
-
-        console.log(e);
-        return JSON.stringify(e)
-    }
-
-}
-module.exports.adminSignup = async function (req) {
-    try {
-        const user = await prisma.admin.create({
-            data: {
-                email: req.body.email,
-                password: req.body.password,
-                name: req.body.name
-            }
-        });
-        return user;
-    } catch (e) {
-        if (e instanceof Prisma.PrismaClientKnownRequestError) {
-            // The .code property can be accessed in a type-safe manner
-            if (e.code === 'P2002') {
-                return 'Email Already Exists Try Different Email Address';
-            }
-        }
-        console.log(e.code);
-        return JSON.stringify(e.code)
-    }
-
 
 }

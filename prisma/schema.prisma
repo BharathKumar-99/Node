@@ -20,3 +20,237 @@ model Question {
   option4       String?
   correctOption String
 }
+
+model User {
+  id             Int            @id @default(autoincrement())
+  createdAt      DateTime       @default(now())
+  email          String         @unique
+  password       String
+  name           String
+  language       Language?      @relation(fields: [languageId], references: [id])
+  languageId     Int?
+  newsLetter     Boolean?
+  profileMessage Boolean?
+  timezoneid     Int?
+  profilePage    String?
+  timezone       TimeZone?      @relation(fields: [timezoneid], references: [id])
+  countryId      Int?
+  country        Country?       @relation(fields: [countryId], references: [id])
+  provinceId     Int?
+  province       Province?      @relation(fields: [provinceId], references: [id])
+  cityId         Int?
+  city           City?          @relation(fields: [cityId], references: [id])
+  districtId     Int?
+  district       District?      @relation(fields: [districtId], references: [id])
+  instructors    Instructor[]
+  Organization   Organization[]
+  Courses        Courses[]
+}
+
+model Language {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  name      String
+  User      User[]
+}
+
+model TimeZone {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  User      User[]
+}
+
+model Country {
+  id        Int        @id @default(autoincrement())
+  name      String
+  createdAt DateTime   @default(now())
+  Province  Province[]
+  User      User[]
+}
+
+model Province {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  countryId Int
+  country   Country  @relation(fields: [countryId], references: [id])
+  City      City[]
+  User      User[]
+}
+
+model City {
+  id         Int        @id @default(autoincrement())
+  name       String
+  createdAt  DateTime   @default(now())
+  provinceId Int
+  province   Province   @relation(fields: [provinceId], references: [id])
+  District   District[]
+  User       User[]
+}
+
+model District {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  cityId    Int
+  city      City     @relation(fields: [cityId], references: [id])
+  User      User[]
+}
+
+model Instructor {
+  id             Int           @id @default(autoincrement())
+  name           String
+  image          String?
+  Courses        Courses[]
+  User           User[]
+  reviews        Reviews[]
+  available      Boolean?
+  statusMsg      String?
+  email          String
+  password       String
+  experiences    String[]
+  Eductions      String[]
+  badges         Badges[]
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId Int?
+  consultant     Boolean?
+}
+
+model Information {
+  id          Int     @id @default(autoincrement())
+  coursesId   Int     @unique
+  Courses     Courses @relation(fields: [coursesId], references: [id])
+  tagId       Tags[]
+  description String
+}
+
+model Tags {
+  id          Int           @id @default(autoincrement())
+  name        String
+  image       String
+  detail      String
+  Information Information[]
+}
+
+model Faq {
+  id        Int     @id @default(autoincrement())
+  question  String
+  answer    String
+  Courses   Courses @relation(fields: [coursesId], references: [id])
+  coursesId Int
+}
+
+model Reviews {
+  id             Int           @id @default(autoincrement())
+  review         String
+  contentCount   Int
+  skillsCount    Int
+  purchaseCount  Int
+  supportCount   Int
+  overAll        Int
+  Courses        Courses       @relation(fields: [coursesId], references: [id])
+  coursesId      Int
+  Instructor     Instructor?   @relation(fields: [instructorId], references: [id])
+  instructorId   Int?
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId Int?
+}
+
+model Comments {
+  id        Int     @id @default(autoincrement())
+  comments  String
+  Courses   Courses @relation(fields: [coursesId], references: [id])
+  coursesId Int
+}
+
+model Courses {
+  id             Int           @id @default(autoincrement())
+  name           String
+  review         Reviews[]
+  instructorId   Int
+  instructor     Instructor    @relation(fields: [instructorId], references: [id])
+  information    Information?
+  videoIntro     String?
+  createdAt      DateTime      @default(now())
+  duration       String
+  faq            Faq[]
+  comments       Comments[]
+  content        Content       @relation(fields: [contentId], references: [id])
+  Categories     Categories    @relation(fields: [categoriesId], references: [id])
+  categoriesId   Int
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId Int?
+  soldCount      Int           @default(0)
+  courseBoughtBy User[]
+  contentId      Int
+}
+
+model Categories {
+  id      Int       @id @default(autoincrement())
+  name    String
+  image   String
+  courses Courses[]
+}
+
+model Badges {
+  id             Int           @id @default(autoincrement())
+  Icon           String
+  name           String
+  descriptions   String
+  Instructor     Instructor?   @relation(fields: [instructorId], references: [id])
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId Int?
+  instructorId   Int?
+}
+
+model Organization {
+  id          Int          @id @default(autoincrement())
+  name        String
+  image       String
+  Courses     Courses[]
+  User        User[]
+  reviews     Reviews[]
+  followers   Int
+  available   Boolean
+  statusMsg   String
+  experiences String[]
+  Eductions   String[]
+  badges      Badges[]
+  instructor  Instructor[]
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  name     String
+}
+
+model Content {
+  id            Int         @id @default(autoincrement())
+  name          String
+  contentlist   ContentList @relation(fields: [contentListId], references: [id])
+  contentListId Int
+  Courses       Courses[]
+}
+
+model ContentList {
+  id            Int         @id @default(autoincrement())
+  name          String
+  type          ContentType @relation(fields: [contentTypeId], references: [id])
+  contentTypeId Int
+  Content       Content[]
+  downloadable  Boolean
+  description   String?
+  video         String?
+  createdDate   DateTime    @default(now())
+  read          Boolean?
+}
+
+model ContentType {
+  id          Int           @id @default(autoincrement())
+  name        String
+  image       String
+  ContentList ContentList[]
+}

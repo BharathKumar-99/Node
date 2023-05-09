@@ -1,5 +1,5 @@
 const express = require('express');
-const { login, signup, adminLogin, adminSignup, getAllUser, getSingleUser, createNewUser, updateUser, deleteUser } = require('../controller/user_controller');
+const { login, signup, getAllInstructor, getSingleInstructor, createNewInstructor, updateInstructor, deleteInstructor } = require('../controller/instructor_controller');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const cors = require("cors");
@@ -31,36 +31,29 @@ router.post('/login', function (req, res) {
     login(req, res);
 });
 
-router.get('/getAllUser', function (req, res) {
-    getAllUser(req, res);
+router.get('/getAllInstructor', function (req, res) {
+    getAllInstructor(req, res);
 });
 
-router.post('/getSingleUser', function (req, res) {
-    getSingleUser(req, res);
+router.post('/getSingleInstructor', function (req, res) {
+    getSingleInstructor(req, res);
 });
 
 router.post('/signup', function (req, res) {
     signup(req, res);
 });
 
-router.post('/createUser', upload.single('profilePic'), function (req, res) {
-    createNewUser(req, res);
+router.post('/createInstructor', upload.single('profilePic'), function (req, res) {
+    createNewInstructor(req, res);
 });
 
-router.patch('/updateUser', upload.single('profilePic'), function (req, res) {
-    updateUser(req, res);
+router.patch('/updateInstructor', upload.single('profilePic'), function (req, res) {
+    updateInstructor(req, res);
 });
 
-router.delete('/deleteUser', function (req, res) {
-    deleteUser(req, res);
+router.delete('/deleteInstructor', function (req, res) {
+    deleteInstructor(req, res);
 });
 
-//Admin
-router.post('/adminSignup', function (req, res) {
-    adminSignup(req, res);
-});
-router.post('/adminlogin', function (req, res) {
-    adminLogin(req, res);
-});
 
 module.exports = router;
