@@ -1,0 +1,24 @@
+version: '3'
+services:
+  postgress:
+    image: postgress:latest
+    container_name: db
+    restart: always
+    volumes:
+      - postgress:/usr/src/app/devdbdata
+    ports: -5432:5432
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'LearningApp'
+  nodejs:
+    build: .
+    ports: -80:8080
+    environment:
+      - DATABASE_URL: 'postgresql://postgres:postgres@postgress:5432/LearningApp?schema=public'
+      - secret: 'pH3kL9sTnDfRmXqGcE8bYjZoVxuIwA72yieuawygfpiuawogfoiawfhawuofgausoifgasiuofg'
+    depends_on:
+      - postgress
+
+volumes:
+  postgress: {}
