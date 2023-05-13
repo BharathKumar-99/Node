@@ -26,9 +26,11 @@ var stroage = multer.diskStorage({
 })
 var upload = multer({ storage: stroage })
 
-router.post('/createCourse', upload.fields([{ name: "contentVideo" }, { name: "courseIntroVideo" }]), function (req, res) {
-    createCourse(req, res);
-});
+router.post('/createCourse',
+    upload.fields([{ name: "courseIntroVideo" }, { name: "courseImage" }]), function (req, res) {
+        console.log(req.fields);
+        createCourse(req, res);
+    });
 
 router.get('/getAllCourses', function (req, res) {
     getAllCourses(req, res);

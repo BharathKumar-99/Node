@@ -23,7 +23,17 @@ module.exports.createCategories = async function (req) {
 module.exports.getAllCategories = async function (req) {
     try {
         const categories = await prisma.categories.findMany(
-            { include: { courses: true } }
+            {
+                include: {
+                    courses: {
+                        include: {
+                            instructor: true, information: true, content: {
+                                include: { contentlist: true }
+                            }, Categories: true
+                        },
+                    }
+                }
+            }
         );
         return categories;
     } catch (e) {

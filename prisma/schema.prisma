@@ -176,14 +176,16 @@ model Courses {
   duration       String
   faq            Faq[]
   comments       Comments[]
-  content        Content       @relation(fields: [contentId], references: [id])
+  content        Content[]
   Categories     Categories    @relation(fields: [categoriesId], references: [id])
   categoriesId   Int
   Organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId Int?
   soldCount      Int           @default(0)
   courseBoughtBy User[]
-  contentId      Int
+  courseImage    String?
+  price          String?
+  isFree         Boolean
 }
 
 model Categories {
@@ -228,24 +230,24 @@ model Admin {
 }
 
 model Content {
-  id            Int         @id @default(autoincrement())
-  name          String
-  contentlist   ContentList @relation(fields: [contentListId], references: [id])
-  contentListId Int
-  Courses       Courses[]
+  id          Int           @id @default(autoincrement())
+  name        String
+  contentlist ContentList[]
+  Courses     Courses[]
 }
 
 model ContentList {
-  id            Int         @id @default(autoincrement())
+  id            Int          @id @default(autoincrement())
   name          String
-  type          ContentType @relation(fields: [contentTypeId], references: [id])
-  contentTypeId Int
-  Content       Content[]
+  type          ContentType? @relation(fields: [contentTypeId], references: [id])
+  contentTypeId Int?
+  Content       Content      @relation(fields: [contentId], references: [id])
   downloadable  Boolean
   description   String?
   video         String?
-  createdDate   DateTime    @default(now())
+  createdDate   DateTime     @default(now())
   read          Boolean?
+  contentId     Int
 }
 
 model ContentType {
